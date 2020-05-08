@@ -1,4 +1,4 @@
-projeto: dh-pi-devopers
+projeto: dh-pi-devops-devopers
 AWS_access_key: "{{ AWSAccessKeyId }}"
 AWS_secret_key: "{{ AWSSecretKey }}"
 instance_type: t2.micro

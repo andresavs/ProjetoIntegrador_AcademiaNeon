@@ -6,9 +6,9 @@
     - vars/aws.yml
 
   vars:
-    name_service: devops-producao
-    name_aim_user_s3: digitalhouse_devopers_producao
-    name_bucket_s3: digitalhouse-devopers-producao
+    name_service: devopers-producao
+    name_aim_user_s3: dh_devopers_producao
+    name_bucket_s3: dh-devopers-producao
 
   tasks:
     - name: Launch the new EC2 Instance 22

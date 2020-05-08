@@ -6,7 +6,7 @@
     - vars/aws.yml
 
   vars:
-    name_service: devops-jenkins
+    name_service: devopers-jenkins
 
   tasks:
     - name: Launch the new EC2 Instance 22
@@ -34,7 +34,7 @@
 
     - name: Create AWS ECR
       ecs_ecr:
-        name: aws-ecr_devopers 
+        name: awsecr-devopers 
         aws_access_key: "{{ AWS_access_key }}"
         aws_secret_key: "{{ AWS_secret_key }}"                
         region: "{{ region }}" 

@@ -6,9 +6,9 @@
     - vars/aws.yml
 
   vars:
-    name_service: devops-homolog
-    name_aim_user_s3: digitalhouse_devopers_homolog
-    name_bucket_s3: digitalhouse-devopers-homolog
+    name_service: devopers-homolog
+    name_aim_user_s3: dh_devopers_homolog
+    name_bucket_s3: dh-devopers-homolog
 
   tasks:
     - name: Launch the new EC2 Instance 22

@@ -11,7 +11,7 @@
       ec2_instance_info:
         region: "{{ region }}"
         filters:
-          "tag:Name": ["devops-jenkins"]
+          "tag:Name": ["devopers-jenkins"]
         aws_access_key: "{{ AWS_access_key }}"
         aws_secret_key: "{{ AWS_secret_key }}"
       register: ec2

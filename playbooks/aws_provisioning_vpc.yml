@@ -25,7 +25,7 @@
         region: "{{ region }}"
         aws_access_key: "{{ AWS_access_key }}"
         aws_secret_key: "{{ AWS_secret_key }}"
-        resource_tags: { "Environment":"AcademiaNeon" }
+        resource_tags: { "Environment":"PI-AcademiaNeon" }
       register: create_vpc           
 
     - name: "set fact: VPC ID"
