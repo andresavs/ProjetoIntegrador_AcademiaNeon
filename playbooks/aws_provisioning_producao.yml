@@ -1,0 +1,76 @@
+- name: "Ansible para configurar VM Producao"
+  hosts: local
+  gather_facts: False
+  vars_files:
+    - vars/aws_credentials.yml
+    - vars/aws.yml
+
+  vars:
+    name_service: devops-producao
+    name_aim_user_s3: digitalhouse_devopers_producao
+    name_bucket_s3: digitalhouse-devopers-producao
+
+  tasks:
+    - name: Launch the new EC2 Instance 22
+      ec2_instance:
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"
+        name: "{{ name_service }}"
+        key_name: "{{ KeyPairDev }}"
+        security_group: "{{ security_group }}"
+        vpc_subnet_id: "{{ vpc_subnet_ids }}"
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ image_ami }}"
+        network:
+            assign_public_ip: true
+        state: running
+        region: "{{ region }}"
+      register: ec2  
+
+    - name: Wait for SSH to come up
+      wait_for:
+        host: "{{ item.public_dns_name }}"
+        port: 22 
+        state: started 
+      with_items: "{{ ec2.instances }}"
+
+    - name: Create iam user "{{ name_aim_user_s3 }}"
+      iam_user:
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"          
+        name: "{{ name_aim_user_s3 }}"
+        managed_policy:
+          - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        state: present
+      register: iuser
+
+    - name: Create a buckets
+      aws_s3:
+        bucket: "{{ name_bucket_s3 }}"
+        mode: create
+        region: "{{ region }}"
+
+    - name: Create S3
+      s3_bucket:
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"          
+        name: "{{ name_bucket_s3 }}"
+        region: "{{ region }}"
+        state: present
+        policy:
+          Version: '2012-10-17'
+          Statement: 
+            - Effect: Allow
+              Principal: 
+                'AWS' : "{{ iuser.iam_user.user.arn }}"
+              Action: [
+                  's3:ListBucket',
+                  's3:DeleteObject',
+                  's3:GetObject',
+                  's3:PutObject',
+                  's3:PutObjectAcl'
+              ]
+              Resource: [
+                'arn:aws:s3:::{{name_bucket_s3}}/*',
+                'arn:aws:s3:::{{name_bucket_s3}}'
+              ] 

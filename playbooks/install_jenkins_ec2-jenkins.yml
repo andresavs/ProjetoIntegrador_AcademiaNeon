@@ -1,0 +1,50 @@
+- name: Instalar Jenkins na VM Jenkins (devops-jenkins)
+  hosts: local
+  gather_facts: False
+
+  vars_files:
+  - vars/aws_credentials.yml
+  - vars/aws.yml
+
+  tasks:
+    - name: Get Info EC2
+      ec2_instance_info:
+        region: "{{ region }}"
+        filters:
+          "tag:Name": ["devops-jenkins"]
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"
+      register: ec2
+
+    - name: Add instance EC2 public IP to host group
+      add_host: hostname={{ item.public_dns_name }} groups=ec2jenkins
+      loop: "{{ ec2.instances }}"
+
+# Inicia a configuracao da EC2
+- name: Instalar Jenkins em VM
+  hosts: ec2jenkins
+  become: yes
+  become_method: sudo
+  gather_facts: true
+
+  vars:
+    jenkins_hostname: "127.0.0.1"
+    jenkins_port: 8080
+    jenkins_java_options: "-Djava.net.preferIPv4Stack=true -Djenkins.install.runSetupWizard=false"
+    jenkins_include_secrets: true
+    jenkins_admin_username: devopers
+    jenkins_admin_password: devopers
+    jenkins_plugins_install_dependencies: true
+    jenkins_prefer_lts: true
+    jenkins_plugins_state: latest
+    jenkins_url_prefix: "/computer"
+  #    jenkins_version: "2.222"
+    jenkins_init_changes:
+    - option: "JENKINS_ARGS"
+      value: "--prefix={{ jenkins_url_prefix }}"
+    - option: "JENKINS_JAVA_OPTIONS"
+      value: "{{ jenkins_java_options }}"
+
+  roles:
+    - { role: geerlingguy.java, remote_src: yes }
+    - { role: geerlingguy.jenkins, remote_src: yes }

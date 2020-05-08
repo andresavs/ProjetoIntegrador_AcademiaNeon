@@ -1,0 +1,104 @@
+- name: "Ansible para configurar VM Jenkins"
+  hosts: local
+  gather_facts: False
+  vars_files:
+    - vars/aws_credentials.yml
+    - vars/aws.yml
+
+  tasks:
+    - name: Amazon EC2 | Create Key Pair
+      ec2_key:
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"
+        name: "{{ KeyPairDev }}"
+      register: ec2_key_result
+
+    - name: Save private key
+      copy: content="{{ ec2_key_result.key.private_key }}" dest="../{{ KeyPairDev }}.pem" mode=0600
+      when: ec2_key_result.changed
+
+    - name: create VPC
+      ec2_vpc_net:
+        state: "present"
+        name: "{{ vpc_name }}"
+        cidr_block: "{{ vpc_cidr_block }}"
+        region: "{{ region }}"
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"
+        resource_tags: { "Environment":"AcademiaNeon" }
+      register: create_vpc           
+
+    - name: "set fact: VPC ID"
+      set_fact:
+        vpc_id: "{{ create_vpc.vpc.id }}"
+
+    - name: create VPC subnets
+      ec2_vpc_subnet:
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"
+        state: present
+        vpc_id: "{{ vpc_id }}"
+        cidr: "{{ cidr_block }}"
+        tags:
+          Name: "{{ sub_tag }}"
+      register: create_vpc_subnets
+
+    - name: "set fact: VPC SUB ID"
+      set_fact:
+        vpc_subnet_ids: "{{ create_vpc_subnets.subnet.id }}"
+    
+    - name: Create a security group
+      ec2_group:
+        name: "{{ security_group }}"
+        vpc_id: "{{ vpc_id }}"
+        description: The webservers security group
+        region: "{{ region }}"
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"
+        rules:
+            - proto: tcp
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 80
+              to_port: 80
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 443
+              to_port: 443
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 8080
+              to_port: 8080
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 3000
+              to_port: 3000
+              cidr_ip: 0.0.0.0/0    
+        rules_egress:
+            - proto: all
+              cidr_ip: 0.0.0.0/0
+
+    - name: Create Internet Gateway with VPC
+      ec2_vpc_igw:
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"        
+        vpc_id: "{{ create_vpc.vpc.id }}"
+        state: present
+      register: igw
+
+    - name: Set up public subnet route table
+      ec2_vpc_route_table:
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"                
+        vpc_id: "{{ create_vpc.vpc.id }}"
+        region: "{{ region }}"
+        tags:
+          Name: "{{ route_tag }}"
+        subnets:
+          - "{{ vpc_subnet_ids }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw.gateway_id }}"
+      register: public_route_table 
