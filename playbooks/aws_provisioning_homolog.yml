@@ -74,4 +74,3 @@
                 'arn:aws:s3:::{{name_bucket_s3}}/*',
                 'arn:aws:s3:::{{name_bucket_s3}}'
               ] 
-

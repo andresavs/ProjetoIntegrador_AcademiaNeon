@@ -12,6 +12,7 @@ Resultados Esperados: Com os aplicativos NodeJS no ar as alunas devem observar a
 
 # Arquitetura
 
+![Arquitetura](docs/DevOpers_ArquiteturaPI.jpeg)
 
 # Provisionando EC2 + S3 + IAM + ECR na AWS
 Partindo do presuposto que seu ambiente de trabalho já está preparado com as devidas ferramentas instaladas e configuradas, seguir os seguintes passos para criar uma infra na AWS. Caso não tenha um ambiente de trabalho por favor verificar o repositório Academia_Neon_DevOps.
