@@ -1,4 +1,4 @@
-- name: "Ansible para configurar VM Jenkins"
+- name: "Ansible para configurar VPC AWS"
   hosts: local
   gather_facts: False
   vars_files:
