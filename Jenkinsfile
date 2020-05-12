@@ -101,7 +101,7 @@ pipeline {
                             sh "docker stop app_homolog"
                             sh "docker rm app_homolog"
                         }
-                        sh "docker run -d --name app_homolog -p 3000:3000 733036961943.dkr.ecr.us-east-1.amazonaws.com/digitalhouse-devops-app:latest"
+                        sh "docker run -d --env NODE_ENV=homolog --env BUCKET_NAME=digitalhouse-devopers-homolog --name app_homolog -p 3000:3000 733036961943.dkr.ecr.us-east-1.amazonaws.com/digitalhouse-devops-app:latest"
                         sh "docker ps"
                         sh 'sleep 10'
                         sh 'curl http://127.0.0.1:3000/api/v1/healthcheck'

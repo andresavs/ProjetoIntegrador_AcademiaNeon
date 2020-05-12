@@ -1,12 +1,12 @@
-# ProjetoIntegrador_AcademiaNeon
+# Projeto Integrador (Curso DevOps) - Academia Neon
 Projeto Integrador para a Academia Neon DevOps - Grupo DevOpers - Utilizando Ansible, Docker, Jenkins, AWS
 
 ## Sobre o Projeto Integrador
-Introdução: Será fornecido um APP feito em NodeJS que escreve e lê arquivos no S3. As configurações necessárias para esse app funcionar serão definidas por variáveis de ambiente (environment)
+Introdução: Será fornecido um APP feito em NodeJS que escreve e lê arquivos no S3. As configurações necessárias para esse app funcionar serão definidas por variáveis de ambiente (environment).
 
 O objetivo: Criar as duas máquinas de app na AWS junto com uma máquina que conterá o Jenkins (para facilitar a evolução
 fora da sala de aula). Com o jenkins no ar elas deverão construir as pipelines clonando o projeto, executando os testes e configurando 
-com as devidas variáveis de ambiente e por fim publicando no ambiente de destino: Prod ou Homolog
+com as devidas variáveis de ambiente e por fim publicando no ambiente de destino: Prod ou Homolog.
 
 Resultados Esperados: Com os aplicativos NodeJS no ar as alunas devem observar a url /healthcheck de cada um deles para ver se foram ou não configurados com sucesso. Deverão testar a ação de upload de imagens da aplicação que foi fornecida e se estiver com os tokens corretos do S3 fará o upload com sucesso.
 
@@ -14,33 +14,75 @@ Resultados Esperados: Com os aplicativos NodeJS no ar as alunas devem observar a
 
 ![Arquitetura](docs/DevOpers_ArquiteturaPI.jpg)
 
+## Preparação Inicial
+Caso não tenha um ambiente de trabalho adequado por favor verificar o repositório [AcademiaNeon_DevOps](https://github.com/andresavs/AcademiaNeon_DevOps).
+
+Para conseguirmos executar os playbooks via Ansible, precisamos configurar as credenciais de segurança em nosso repositório. Supondo que o clone deste projeto tenha sido feito, seguir os passos abaixo conforme descrito.
+
+1. É necessário criar uma conta na [AWS](https://portal.aws.amazon.com/billing/signup#/start). 
+Importante: Após criar a conta, sempre fazer o login com o root user. 
+
+2. Dentro do seu desktop de trabalho, no nosso caso é a vm criada com o vagrant, que vamos acessar via vscode, criar um arquivo para as senhas.
+Para quem estiver familiarizado pode utilizar o vi para criar/editar o arquivo.
+* `$ vi ~/.ansible/.vault_pass`
+Ou então utilizar o echo e substituir o texto <"MinhaSenha"> pela senha.
+* `$ echo <"MinhaSenha"> ~/.ansible/.vault_pass`
+
+3. Criar o arquivo aws_credentials.yml dentro da pasta vars do repositório do projeto com as credenciais de segurança do usuário root da AWS.
+
+    3.1. Acessar o console da AWS com o user root e ir em:
+        * My Security Credentials → Access keys (access key ID and secret access key) → Create New Access Key
+        Importante: Fazer o download das informações.
+
+    3.2. Criar o arquivo e colocar as informações conforme abaixo:
+
+        AWSAccessKeyId: ABCDE******* 
+        AWSSecretKey: aBCD123-*******
+
+4. Encriptar o arquivo aws_credentials.yml
+* `$ ansible-vault encrypt aws_credentials.yml --vault-password-file ~/.ansible/.vault_pass`
+Importante: Mesmo criptrografado evitar de subir esse arquivo aws_credentials.yml no git.
+
+## Configurar AWSCLI no desktop de trabalho
+Para ter acesso aos recursos da aws via linha de comando em nosso desktop de trabalho é necessário configurar as credenciais do seu usuário. Caso queira, seguir os passos descritos abaixo:
+
+1. Configurar o AWS CLI
+* `$ aws configure`
+Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho (a us-east-1 é a mais economica no momento) e o formato por padrão é json, mas você pode colocar também.
+
+2. Alguns comandos para testar:
+* `$ aws iam list-access-keys` 
+* `$ aws ec2 describe-regions` 
+
 ## Provisionando EC2 + S3 + IAM + ECR na AWS
-Partindo do presuposto que seu ambiente de trabalho já está preparado com as devidas ferramentas instaladas e configuradas, seguir os seguintes passos para criar uma infra na AWS. Caso não tenha um ambiente de trabalho por favor verificar o repositório Academia_Neon_DevOps.
+Partindo do presuposto que seu ambiente de trabalho já está preparado e com as devidas ferramentas instaladas e configuradas, podemos iniciar a criação do ambiente na AWS, caso contrário volte para a Preparação Inicial.
 
 O objetivo é criar um ambiente de Homologação e Produção + um servidor que rodará o Jenkins.
-* Ao ser executado o item abaixo irá criar uma VPC e todos os itens obrigatórios relacionados a ela (por exemplo, subnet, security group, entre outros), logo após irá gerar uma key-pair e salvar. Logo após irá criar uma EC2 para o Jenkins e um ECR (Elastic Container Registry), em seguida uma EC2 para Produção, um user e um bucket S3. E por último criará uma EC2 para Homologação, um user e um bucket S3
+* Ao ser executado o item abaixo irá criar uma VPC e todos os itens obrigatórios relacionados a ela (por exemplo, subnet, security group, entre outros), logo após irá gerar uma key-pair e salvar. Logo após irá criar uma EC2 para o Jenkins e um ECR (Elastic Container Registry), em seguida uma EC2 para Produção, um user e um bucket S3. E por último criará uma EC2 para Homologação, um user e um bucket S3.
 
-* * `$ ansible-playbook playbooks/aws_provisioning.yml`
+    * `$ ansible-playbook playbooks/aws_provisioning.yml`
 
-O script acima utiliza os seguintes scripts: aws_provisioning_vpc.yml, aws_provisioning_jenkins.yml, aws_provisioning_producao.yml, aws_provisioning_homolog.yml
+O script acima utiliza os seguintes scripts: aws_provisioning_vpc.yml, aws_provisioning_jenkins.yml, aws_provisioning_producao.yml, aws_provisioning_homolog.yml.
 
 * Para validar se foi criado acessar o console da AWS ou executar o seguinte comando:
-* * `$ ansible-inventory --graph aws_ec2`
+    * `$ ansible-inventory --graph aws_ec2`
 
 ## Configurando Maquinas EC2 
 Após todo o ambiente criado na AWS, precisamos configurar as máquinas, todas as 3 EC2 criadas terão os pacotes atualizados e os seguintes itens instalados via ansible: docker, awscli, java, python, entre outros. Já a EC2 do Jenkins vamos instalar também o ansible e o jenkins. 
 
 * Atualizar pacotes e instalar awscli, java, python - Esse script foi preparado para atualizar as 3 EC2 ao ser executado...
-* * `$ ansible-playbook playbooks/config_all-ec2.yml`
+    * `$ ansible-playbook playbooks/config_all-ec2.yml`
 
 * Instalar docker - Esse script foi preparado para atualizar as 3 EC2 ao ser executado...
-* * `$ ansible-playbook playbooks/install_docker_all-ec2.yml`
+    * `$ ansible-playbook playbooks/install_docker_all-ec2.yml`
 
 * Instalar ansible - Esse script foi preparado para atualizar apenas a EC2 do Jenkins ao ser executado...
-* * `$ ansible-playbook playbooks/install_ansible_ec2-jenkins.yml`
+    * `$ ansible-playbook playbooks/install_ansible_ec2-jenkins.yml`
 
 * Instalar jenkins - Esse script foi preparado para atualizar apenas a EC2 do Jenkins ao ser executado...
-* * `$ ansible-playbook playbooks/install_jenkins_ec2-jenkins.yml`
+    * `$ ansible-playbook playbooks/install_jenkins_ec2-jenkins.yml`
+
+Observação: todos os playbooks podem ser executados com o parametro "-vvv" para ter um nível maior de detalhes. Ex: `$ ansible-playbook playbooks/aws_provisioning.yml -vvv`     
 
 ## Configurando Jenkins 
 Instalar plugins Jenkins que vamos utilizar em nosso pipeline.
@@ -59,15 +101,15 @@ ssh -i <chave que salvou>.pem ubuntu@<nome ou ip publico>
 
 Caso o usuário não esteja executar o comando abaixo para incluir e depois reiniciar o serviço.
 * Verificar usuário
-* * `$ id jenkins` 
+    * `$ id jenkins` 
 * Incluir o usuário no grupo
-* * `$ sudo addgroup jenkins docker` 
+    * `$ sudo addgroup jenkins docker` 
 * Parar o serviço do jenkins
-* * `$ sudo service jenkins stop`
+    * `$ sudo service jenkins stop`
 * Subir o serviço do jenkins
-* * `$ sudo service jenkins start`
+    * `$ sudo service jenkins start`
 * Validar o serviço do jenkins
-* * `$ sudo service jenkins status`
+    * `$ sudo service jenkins status`
 
 Configurar nodes Homolog e Produção para a execução do pipeline
 Gerenciar Jenkins → Gerenciar nós → novo nó
@@ -84,12 +126,16 @@ AWS Credentials + Global + ID e Private Key AWS
 Após realizar todas as configurações é possível criar um Job Pipeline que irá no repositório git e fará todo o deploy através do Jenkinsfile.
 
 ## APP NodeJS utilizado
-Foi realizado um fork do repositório https://github.com/bgsouza/digitalhouse-devops-app.git para https://github.com/andresavs/digitalhouse-devops-app.git pois teriamos que customizar o arquivo Jenksfile.
+Foi realizado um fork do [repositório do Desenvolvedor](https://github.com/bgsouza/digitalhouse-devops-app.git) para [repositório Dev do Projeto](https://github.com/andresavs/digitalhouse-devops-app.git) pois teriamos que customizar o arquivo Jenksfile.
 
-## Documentação Oficial
-
-* https://www.ansible.com/
-* https://github.com/
-* https://www.docker.com/
-* https://www.jenkins.io/
-* https://aws.amazon.com/pt/
+## Referências
+* Professores
+    * Bruno G. Souza - https://github.com/bgsouza/digitalhouse-devops-app
+    * Krishna Pennacchioni - https://github.com/agentelinux/devops-pi/tree/grupo1
+* Material do curso - Playground Digital House
+* Documentação Oficial
+    * https://www.ansible.com/
+    * https://github.com/
+    * https://www.docker.com/
+    * https://www.jenkins.io/
+    * https://aws.amazon.com/pt/
