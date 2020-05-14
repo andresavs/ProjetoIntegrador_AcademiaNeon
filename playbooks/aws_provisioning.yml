@@ -1,4 +1,4 @@
-# Criando Infra na AWS - VPC e dependencias + EC2 Jenkins com ECR + EC2 Produção Com S3 e IAM user + EC2 Homolog Com S3 e IAM User
+# Criando Infra na AWS - Key Pair e VPC com suas dependencias + EC2 Jenkins com ECR + EC2 Produção Com S3 e IAM user + EC2 Homolog Com S3 e IAM User
 - import_playbook: aws_provisioning_vpc.yml
 - import_playbook: aws_provisioning_jenkins.yml
 - import_playbook: aws_provisioning_producao.yml
