@@ -1,4 +1,4 @@
-- name: "Ansible para configurar VPC AWS"
+- name: "Ansible para configurar criar e configurar VPC + cirar e salvar Key Pair EC2"
   hosts: local
   gather_facts: False
   vars_files:
