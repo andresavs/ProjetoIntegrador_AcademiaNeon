@@ -14,12 +14,12 @@ Resultados Esperados: Com os aplicativos NodeJS no ar as alunas devem observar a
 A intenção desse README, além de falar sobre o projeto e as ferramentas utilizadas para a construção do mesmo, é ajudar no entendimento de como o projeto foi construído, explicando passo a passo do que foi feito e como foi feito, para que qualquer pessoa que esteja iniciando seus estudos seja capaz de entender e executar.
 
 Para quem deseja apenas visualizar os "entregáveis" finais do Projeto, consultar os itens:
-* (## Provisionando EC2 + S3 + IAM + ECR na AWS)
-* (## Configurando Maquinas EC2) 
-* (## Configurando Jenkins)
-* (## Pipeline Jenkins)
-* [`Evidências`](## Evidências)
-* [`Referências`](##Referências)
+* [`Provisionando Ambiente AWS`](#provisionando-ec2--s3--iam--ecr-na-aws)
+* [`Configurando EC2`](#configurando-maquinas-ec2) 
+* [`Configurando Jenkins`](#configurando-jenkins)
+* [`Pipeline Jenkins`](#Pipeline-jenkins)
+* [`Evidências`](#evidências)
+* [`Referências`](#referências)
 * [Apresentação](docs/DevOpers - PI.pptx)
 
 ## Arquitetura
