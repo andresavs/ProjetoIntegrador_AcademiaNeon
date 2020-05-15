@@ -20,7 +20,7 @@ Para quem deseja apenas visualizar os "entregáveis" finais do Projeto, consulta
 * [`Pipeline Jenkins`](#Pipeline-jenkins)
 * [`Evidências`](#evidências)
 * [`Referências`](#referências)
-* ![Apresentação](docs/DevOpers - PI.pptx)
+* ![Apresentação](docs/DevOpers_PI.pptx)
 
 ## Arquitetura
 
@@ -161,8 +161,8 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
                 *route_tag: "{{ projeto }}-route"* → Define o nome da Route Table (Faz parte da VPC). 
                 *sub_tag: "{{ projeto }}-subnet"* → Define o nome da Subnet (Faz parte da VPC). 
 
-                [Link útil sobre VPC e Subnets e CIDR](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
-                [Link útil sobre VPC e Route Tables](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html)
+            [Link útil sobre VPC e Subnets e CIDR](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
+            [Link útil sobre VPC e Route Tables](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html)
 
         * Criando a Key Pair das instâncias EC2
             Apesar de ser um item das EC2s, ele ficou aqui pois é usado em todas as EC2 e é criado é baixado apenas uma única vez.
@@ -221,8 +221,8 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
                 *- name: name: Create a buckets* → Cria o bucket S3 (apesar de criar esse módulo é utilizado mais para gerenciar os arquivos).
                 *- name: Create S3* → Cria o bucket S3 e realiza as configurações.
 
-        [Link útil - módulo ansible iam user](https://docs.ansible.com/ansible/latest/modules/iam_user_module.html)    
-        [Link útil - módulo ansible aws s3](https://docs.ansible.com/ansible/latest/modules/aws_s3_module.html)
+        [Link útil - módulo ansible iam user](https://docs.ansible.com/ansible/latest/modules/iam_user_module.html)              
+        [Link útil - módulo ansible aws s3](https://docs.ansible.com/ansible/latest/modules/aws_s3_module.html)             
         [Link útil - módulo ansible s3 bucket](https://docs.ansible.com/ansible/latest/modules/s3_bucket_module.html)    
         
 
