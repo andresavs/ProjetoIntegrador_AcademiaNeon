@@ -124,6 +124,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 
     * ansible.cfg
         É o arquivo de configuração do ansible, indica onde fica a pasta inventory por exemplo
+
         ` [defaults] `                            
         ` inventory=inventory/ `
 
@@ -139,7 +140,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 
     * Playbook aws_provisioning_vpc.yml 
 
-        ![aws-provisioning-vpc](docs/aws-provisioning-vpc.png)
+        ![aws-provisioning-vpc](docs/aws_provisioning-vpc.png)
 
         * Item var_files
             Neste item temos dois arquivos de variáveis, um está armazenando nossas credenciais da AWS criptografadas (vars/aws_credentials.yml) que criamos no item Preparação Inicial deste README, e a outro (vars/aws.yml) tem as variáveis que serão usadas nas tasks. Como sempre, segue um link da [Documentação Oficial](https://docs.ansible.com/ansible/2.5/user_guide/playbooks_variables.html) que fala mais sobre variáveis.
@@ -147,18 +148,30 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
              ![aws-vars](docs/aws-vars.png)
 
              Breve comentário sobre cada item
-                *projeto: dh-pi-devops-devopers* → Compõe as demais variáveis desse arquivo             
-                *AWS_access_key: "{{ AWSAccessKeyId }}"* → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml           
-                *AWS_secret_key: "{{ AWSSecretKey }}"* → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml              
-                *instance_type: t2.micro* → Define o tipo da instância que será criado na AWS, para este projeto será uma t2.micro                                   
-                *security_group: "{{ projeto }}-ws-sg" *→ Define o nome do Security Group                              
-                *image_ami: ami-07ebfd5b3428b6f4d* → Define a imagem que vamos utilizar para criar a máquina na AWS                                  
-                *KeyPairDev: "{{ projeto }}-key"* → Define o nome da key pair                                  
-                *region: us-east-1* → Define a [região](https://docs.aws.amazon.com/pt_br/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) que vamos utilizar na AWS.                      
-                *vpc_cidr_block: 10.0.0.0/16* → Define o CIDR (Tamanho da VPC = quantidade de ips que ela vai ter) block da VPC.                  
-                *cidr_block: 10.0.1.16/28* → Define o CIDR (Tamanho da Subnet = quantidade de ips que ela vai ter) block da Subnet.                                          
-                *vpc_name: "{{ projeto }}-vpc"* → Define o nome da VPC.                         
-                *route_tag: "{{ projeto }}-route"* → Define o nome da Route Table (Faz parte da VPC).                     
+                *projeto: dh-pi-devops-devopers* → Compõe as demais variáveis desse arquivo.
+
+                *AWS_access_key: "{{ AWSAccessKeyId }}"* → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml.
+
+                *AWS_secret_key: "{{ AWSSecretKey }}"* → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml.
+
+                *instance_type: t2.micro* → Define o tipo da instância que será criado na AWS, para este projeto será uma t2.micro.
+
+                *security_group: "{{ projeto }}-ws-sg"* → Define o nome do Security Group.
+
+                *image_ami: ami-07ebfd5b3428b6f4d* → Define a imagem que vamos utilizar para criar a máquina na AWS.
+
+                *KeyPairDev: "{{ projeto }}-key"* → Define o nome da key pair.
+
+                *region: us-east-1* → Define a [região](https://docs.aws.amazon.com/pt_br/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) que vamos utilizar na AWS.    
+
+                *vpc_cidr_block: 10.0.0.0/16* → Define o CIDR (Tamanho da VPC = quantidade de ips que ela vai ter) block da VPC.  
+
+                *cidr_block: 10.0.1.16/28* → Define o CIDR (Tamanho da Subnet = quantidade de ips que ela vai ter) block da Subnet.
+
+                *vpc_name: "{{ projeto }}-vpc"* → Define o nome da VPC.         
+
+                *route_tag: "{{ projeto }}-route"* → Define o nome da Route Table (Faz parte da VPC).  
+
                 *sub_tag: "{{ projeto }}-subnet"* → Define o nome da Subnet (Faz parte da VPC).                     
 
             [Link útil sobre VPC e Subnets e CIDR](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
