@@ -20,7 +20,7 @@ Para quem deseja apenas visualizar os "entregáveis" finais do Projeto, consulta
 * [`Pipeline Jenkins`](#Pipeline-jenkins)
 * [`Evidências`](#evidências)
 * [`Referências`](#referências)
-* [Apresentação](docs/DevOpers - PI.pptx)
+* ![Apresentação](docs/DevOpers - PI.pptx)
 
 ## Arquitetura
 
@@ -58,7 +58,7 @@ Ou então utilizar o echo e substituir o texto <"MinhaSenha"> pela "senha".
 
     * Criar o arquivo e colocar as informações conforme abaixo:
 
-        AWSAccessKeyId: ABCDE******* 
+        AWSAccessKeyId: ABCDE*******       
         AWSSecretKey: aBCD123-*******
 
 4. Encriptar o arquivo aws_credentials.yml
