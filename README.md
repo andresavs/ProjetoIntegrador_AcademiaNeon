@@ -133,7 +133,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 
         Utilizada para definiçao dos hosts e algumas variáveis de ambiente importantes para os hosts.
 
-        ` ansible_ssh_private_key_file=./dh-pi-devopers-key.pem `
+        ***ansible_ssh_private_key_file=./dh-pi-devopers-key.pem***
 
         [Mais informações sobre inventory e hosts.](https://docs.ansible.com/ansible/2.3/intro_inventory.html)
 
@@ -165,7 +165,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 
              ![aws-vars](docs/aws-vars.png)
 
-             Breve comentário sobre cada item
+             Breve comentário sobre cada item:                  
                 ***projeto: dh-pi-devops-devopers*** → Compõe as demais variáveis desse arquivo.                                         
                 ***AWS_access_key: "{{ AWSAccessKeyId }}"*** → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml.          
                 ***AWS_secret_key: "{{ AWSSecretKey }}"*** → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml.                         
@@ -192,7 +192,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
              [Link útil - módulo ansible key pair.](https://docs.ansible.com/ansible/latest/modules/ec2_key_module.html)       
 
         * Criando a Amazon VPC - Amazon Virtual Private Cloud
-            Podemos dizer que a Amazon VPC é uma seção isolada logicamente dentro da nuvem da AWS onde você cria e executa os demais serviços. Para mais informações acessar a [Documentação Oficial](https://aws.amazon.com/pt/vpc/). Para criar a VPC direto no console da AWS é bem simples e intuitivo e muitos itens obrigatórios e dependentes são criados automaticamente, todos os itens "obrigatórios" foram criados em no aws_provisioning_vpc.yml playbook e podem ser identificados dentro do item tasks → name. Todos os itens que estão "{{ xxxxx }}" são variavéis que definimos em nosso arquivo vars/aws_credentials.yml ou são "itens de configuração padrão". O único item que pode ser customizado direto no aws_provisioning_vpc.yml é o resource_tags: { "Environment":"PI-AcademiaNeon" }, que é usado para identificar o ambiente daquela vpc, no nosso projeto, usamos PI-AcademiaNeon, pois ele se refere exatamente ao projeto integrador do Curso DevOps da Academia Neon. Isse item por ser mais seguimentado ainda, por exemplo, na vpc criamos um ambiente de Desenvolvimento, e criamos mais de um subnet - segmentamos os ranges de ips para dois sub-ambientes (não é nosso caso hoje), onde teremos o Dev DB para banco de dados e o Dev App para a aplicação.
+            Podemos dizer que a Amazon VPC é uma seção isolada logicamente dentro da nuvem da AWS onde você cria e executa os demais serviços. Para mais informações acessar a [Documentação Oficial](https://aws.amazon.com/pt/vpc/). Para criar a VPC direto no console da AWS é bem simples e intuitivo e muitos itens obrigatórios e dependentes são criados automaticamente, todos os itens "obrigatórios" foram criados em no aws_provisioning_vpc.yml playbook e podem ser identificados dentro do item tasks → name. Todos os itens que estão "{{ xxxxx }}" são variavéis que definimos em nosso arquivo vars/aws_credentials.yml ou são "itens de configuração padrão". O único item que pode ser customizado direto no aws_provisioning_vpc.yml é o ***resource_tags: { "Environment":"PI-AcademiaNeon" }***, que é usado para identificar o ambiente daquela vpc, no nosso projeto, usamos PI-AcademiaNeon, pois ele se refere exatamente ao projeto integrador do Curso DevOps da Academia Neon. Isse item por ser mais seguimentado ainda, por exemplo, na vpc criamos um ambiente de Desenvolvimento, e criamos mais de um subnet - segmentamos os ranges de ips para dois sub-ambientes (não é nosso caso hoje), onde teremos o Dev DB para banco de dados e o Dev App para a aplicação.
 
             ![vpc](docs/vpc.png) 
 
@@ -209,14 +209,14 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
         * aws_provisioning_jenkins.yml
             A EC2 criada nesse playbook será o servidor Jenkins, por isso o nome. E também será criado um repositório [ECR](https://aws.amazon.com/pt/ecr/) - Amazon Elastic Container Registry, que é um serviço totalmente gerenciado que armazena imagens de conteiners do Docker, nele será armazenado e versionado as imagens que nosso pipeline irá gerar.
 
-            Além do arquivo de variáveis também podemos definir variáveis específicas por playbooks, neste temos o nome que nossa EC2 terá, vide linha 8 e 9.
+            Além do arquivo de variáveis também podemos definir variáveis específicas por playbooks, neste temos o nome que nossa EC2 terá, vide linha 8 e 9.              
                 ***vars:***
                    ***name_service: devopers-jenkins***
             
-            Temos as seguintes tasks nesse playbook:
-                ***- name: Launch the new EC2 Instance 22*** → Cria a instância EC2 de acordo com as variáveis do itens vars_files e o vars.
-                ***- name: Wait for SSH to come up*** → Aguarda o serviço de SSH ficar disponível, ou seja, a terminar a configuração e máquina ficar running.
-                ***- name: Create AWS ECR*** → Cria o repositório de imagens de containers Docker, o nome é definido por *name: digitalhouse-devops-app*, e usamos o nome da imagem como nome do repositório.
+            Temos as seguintes tasks nesse playbook:                          
+                ***- name: Launch the new EC2 Instance 22*** → Cria a instância EC2 de acordo com as variáveis do itens vars_files e o vars.                               
+                ***- name: Wait for SSH to come up*** → Aguarda o serviço de SSH ficar disponível, ou seja, a terminar a configuração e máquina ficar running.             
+                ***- name: Create AWS ECR*** → Cria o repositório de imagens de containers Docker, o nome é definido por *name: digitalhouse-devops-app*, e usamos o nome da imagem como nome do repositório.        
 
             ![ec2jenkins](docs/ec2-jenkins.png) 
 
