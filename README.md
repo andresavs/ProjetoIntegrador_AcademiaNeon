@@ -14,19 +14,12 @@ Resultados Esperados: Com os aplicativos NodeJS no ar as alunas devem observar a
 
 
 
-## Sobre este README
-A intenção desse README, além de falar sobre o projeto e as ferramentas utilizadas para a construção do mesmo, é ajudar no entendimento de como o projeto foi construído, explicando passo a passo do que foi feito e como foi feito, para que qualquer pessoa que esteja iniciando seus estudos seja capaz de entender e executar.
+## Conteúdos Adicionais
 
-Para quem deseja apenas visualizar os "entregáveis" finais do Projeto, consultar os itens:
-* [`Provisionando Ambiente AWS`](#provisionando-ec2--s3--iam--ecr-na-aws)
-* [`Configurando EC2`](#configurando-maquinas-ec2) 
-* [`Configurando Jenkins`](#configurando-jenkins)
-* [`Pipeline Jenkins`](#Pipeline-jenkins)
-* [`Evidências`](#evidências)
-* [`Referências`](#referências)
+Para acessar a Apresentação.
 * [`Apresentação - PowerPoint`](docs/DevOpers_PI.pptx)
 
-Para quem deseja replicar e entender melhor este projeto, documentação completa, um passo a passo, do que foi feito e como foi feito, para que qualquer pessoa que esteja iniciando seus estudos seja capaz de entender e executar.          
+Para quem deseja replicar e entender melhor este projeto, pode baixar a documentação completa, um passo a passo, do que foi feito e como foi feito, para que qualquer pessoa que esteja iniciando seus estudos seja capaz de entender e executar.          
 * [`Tutorial de Como Fazer este Projeto do Zero`](docs/DevOpers_PI.docx)
 
 Caso não tenha um ambiente de trabalho adequado por favor verificar o item abaixo.           
