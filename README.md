@@ -234,11 +234,11 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
             
             Temos as seguintes tasks nesse playbook:
 
-            ***- name: Launch the new EC2 Instance 22*** → Cria a instância EC2 de acordo com as variáveis do itens vars_files e o vars.
-            ***- name: Wait for SSH to come up*** → Aguarda o serviço de SSH ficar disponível, ou seja, a terminar a configuração e máquina ficar running.
-            ***- name: Create iam user "{{ name_aim_user_s3 }}"*** → Criar o usuário IAM e dá as permissões.
-            ***- name: name: Create a buckets*** → Cria o bucket S3 (apesar de criar esse módulo é utilizado mais para gerenciar os arquivos).
-            ***- name: Create S3*** → Cria o bucket S3 e realiza as configurações.
+            ***- name: Launch the new EC2 Instance 22*** → Cria a instância EC2 de acordo com as variáveis do itens vars_files e o vars.                         
+            ***- name: Wait for SSH to come up*** → Aguarda o serviço de SSH ficar disponível, ou seja, a terminar a configuração e máquina ficar running.               
+            ***- name: Create iam user "{{ name_aim_user_s3 }}"*** → Criar o usuário IAM e dá as permissões.                                     
+            ***- name: name: Create a buckets*** → Cria o bucket S3 (apesar de criar esse módulo é utilizado mais para gerenciar os arquivos).                    
+            ***- name: Create S3*** → Cria o bucket S3 e realiza as configurações.                                             
 
         [Link útil - módulo ansible iam user.](https://docs.ansible.com/ansible/latest/modules/iam_user_module.html)                 
         [Link útil - módulo ansible aws s3.](https://docs.ansible.com/ansible/latest/modules/aws_s3_module.html)                 
@@ -279,12 +279,12 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
     * install_jenkins_ec2-jenkins.yml    
         Instala e configura o Jenkins na EC2 do Jenkins. Os itens abaixo podem/devem ser alterados:
             
-           ***jenkins_admin_username: devopers***    
-           ***jenkins_admin_password: devopers***
+        ***jenkins_admin_username: devopers***    
+        ***jenkins_admin_password: devopers***
 
     É necessário alterar a linha 14 nos 4 arquivos acima, caso altere o nome das EC2.
 
-       ***"tag:Name": ["devopers-jenkins"]***    
+    ***"tag:Name": ["devopers-jenkins"]***    
 
 
 [Link útil - Módulos Ansible de todas as Clouds.](https://docs.ansible.com/ansible/latest/modules/list_of_cloud_modules.html#)
