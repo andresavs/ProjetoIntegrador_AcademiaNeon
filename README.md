@@ -142,7 +142,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
         É o arquivo de configuração do ansible, indica onde fica a pasta inventory por exemplo
 
         ***[defaults]***                            
-           ***inventory=inventory/***
+               ***inventory=inventory/***
 
         [Mais informações sobre o arquivo ansible.cfg.](https://docs.ansible.com/ansible/latest/reference_appendices/config.html)
 
@@ -166,13 +166,13 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
              ![aws-vars](docs/aws-vars.png)
 
              Breve comentário sobre cada item
-                ***projeto: dh-pi-devops-devopers*** → Compõe as demais variáveis desse arquivo.        
-                ***AWS_access_key: "{{ AWSAccessKeyId }}"*** → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml.
-                ***AWS_secret_key: "{{ AWSSecretKey }}"*** → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml.        
+                ***projeto: dh-pi-devops-devopers*** → Compõe as demais variáveis desse arquivo.                                         
+                ***AWS_access_key: "{{ AWSAccessKeyId }}"*** → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml.          
+                ***AWS_secret_key: "{{ AWSSecretKey }}"*** → Credenciais AWS - está no arquivo criptografado no item Preparação Inicial vars/aws_credentials.yml.                         
                 ***instance_type: t2.micro*** → Define o tipo da instância que será criado na AWS, para este projeto será uma t2.micro.        
                 ***security_group: "{{ projeto }}-ws-sg"*** → Define o nome do Security Group.              
-                ***image_ami: ami-07ebfd5b3428b6f4d** → Define a imagem que vamos utilizar para criar a máquina na AWS.               
-                ***KeyPairDev: "{{ projeto }}-key"** → Define o nome da key pair.              
+                ***image_ami: ami-07ebfd5b3428b6f4d*** → Define a imagem que vamos utilizar para criar a máquina na AWS.               
+                ***KeyPairDev: "{{ projeto }}-key"*** → Define o nome da key pair.              
                 ***region: us-east-1*** → Define a [região](https://docs.aws.amazon.com/pt_br/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) que vamos utilizar na AWS.                      
                 ***vpc_cidr_block: 10.0.0.0/16*** → Define o CIDR (Tamanho da VPC = quantidade de ips que ela vai ter) block da VPC.                 
                 ***cidr_block: 10.0.1.16/28*** → Define o CIDR (Tamanho da Subnet = quantidade de ips que ela vai ter) block da Subnet.                  
@@ -180,8 +180,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
                 ***route_tag: "{{ projeto }}-route"*** → Define o nome da Route Table (Faz parte da VPC).              
                 ***sub_tag: "{{ projeto }}-subnet"*** → Define o nome da Subnet (Faz parte da VPC).                                
 
-            [Link útil sobre VPC e Subnets e CIDR.](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
-
+            [Link útil sobre VPC e Subnets e CIDR.](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)                 
             [Link útil sobre VPC e Route Tables.](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html)
 
         * Criando a Key Pair das instâncias EC2
@@ -197,14 +196,10 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 
             ![vpc](docs/vpc.png) 
 
-            [Link útil - módulo ansible ec2-vpc.](https://docs.ansible.com/ansible/latest/modules/ec2_vpc_net_module.html)
-
-            [Link útil - módulo ansible ec2-subnet.](https://docs.ansible.com/ansible/latest/modules/ec2_vpc_subnet_module.html)
-
-            [Link útil - módulo ansible ec2-securitygroup.](https://docs.ansible.com/ansible/latest/modules/ec2_group_module.html)
-
-            [Link útil - módulo ansible ec2-internetgateway.](https://docs.ansible.com/ansible/latest/modules/ec2_vpc_igw_module.html)
-
+            [Link útil - módulo ansible ec2-vpc.](https://docs.ansible.com/ansible/latest/modules/ec2_vpc_net_module.html)                  
+            [Link útil - módulo ansible ec2-subnet.](https://docs.ansible.com/ansible/latest/modules/ec2_vpc_subnet_module.html)                    
+            [Link útil - módulo ansible ec2-securitygroup.](https://docs.ansible.com/ansible/latest/modules/ec2_group_module.html)               
+            [Link útil - módulo ansible ec2-internetgateway.](https://docs.ansible.com/ansible/latest/modules/ec2_vpc_igw_module.html)                    
             [Link útil - módulo ansible ec2-routetable.](https://docs.ansible.com/ansible/latest/modules/ec2_vpc_route_table_module.html)
 
     * Playbooks aws_provisioning_jenkins.yml + aws_provisioning_homolog.yml + aws_provisioning_producao.yml
@@ -215,8 +210,8 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
             A EC2 criada nesse playbook será o servidor Jenkins, por isso o nome. E também será criado um repositório [ECR](https://aws.amazon.com/pt/ecr/) - Amazon Elastic Container Registry, que é um serviço totalmente gerenciado que armazena imagens de conteiners do Docker, nele será armazenado e versionado as imagens que nosso pipeline irá gerar.
 
             Além do arquivo de variáveis também podemos definir variáveis específicas por playbooks, neste temos o nome que nossa EC2 terá, vide linha 8 e 9.
-                **vars:**
-                   **name_service: devopers-jenkins**
+                ***vars:***
+                   ***name_service: devopers-jenkins***
             
             Temos as seguintes tasks nesse playbook:
                 ***- name: Launch the new EC2 Instance 22*** → Cria a instância EC2 de acordo com as variáveis do itens vars_files e o vars.
@@ -225,7 +220,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 
             ![ec2jenkins](docs/ec2-jenkins.png) 
 
-        [Link útil - módulo ansible ecr.](https://docs.ansible.com/ansible/latest/modules/ecs_ecr_module.html)    
+        [Link útil - módulo ansible ecr.](https://docs.ansible.com/ansible/latest/modules/ecs_ecr_module.html)                
 
         * aws_provisioning_homolog.yml
             A EC2 criada nesse playbook será o servidor de Homologação, por isso o nome. E também será criado um usuário [IAM](https://aws.amazon.com/pt/iam/) - AWS Identity and Access Management, onde gerenciamos os acessos aos serviços e recursos da AWS, criando usuários, grupos, roles, entre outros. E um bucket [S3](https://aws.amazon.com/pt/s3/) - Amazon Simple Storage Service (Amazon S3), é um serviço de armazenamento de objetos resiliente, para o ambiente de Homologação.
@@ -245,10 +240,8 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
                ***- name: name: Create a buckets*** → Cria o bucket S3 (apesar de criar esse módulo é utilizado mais para gerenciar os arquivos).
                ***- name: Create S3*** → Cria o bucket S3 e realiza as configurações.
 
-        [Link útil - módulo ansible iam user.](https://docs.ansible.com/ansible/latest/modules/iam_user_module.html)      
-
-        [Link útil - módulo ansible aws s3.](https://docs.ansible.com/ansible/latest/modules/aws_s3_module.html)    
-
+        [Link útil - módulo ansible iam user.](https://docs.ansible.com/ansible/latest/modules/iam_user_module.html)                 
+        [Link útil - módulo ansible aws s3.](https://docs.ansible.com/ansible/latest/modules/aws_s3_module.html)                 
         [Link útil - módulo ansible s3 bucket.](https://docs.ansible.com/ansible/latest/modules/s3_bucket_module.html)    
         
 
@@ -268,17 +261,17 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 * **Falando um pouco sobre a configuração das máquinas criadas**:
     Dividimos a configuração em 4 arquivos e utilizamos eles de forma dinâmica com o conceito de hosts + o [módulo](https://docs.ansible.com/ansible/latest/modules/ec2_instance_info_module.html) que coleta informações das instâncias, ou seja, podemos incluir quantas máquinas forem necessárias e executar o playbook apenas uma vez, e eles fará a instalação e/ou configuração em todas as máquinas "tagueadas":
 
-    * config_all-ec2.yml       
+    É necessário alterar a linha 14 nos dois arquivos baixo (config_all-ec2.yml e install_docker_all-ec2.yml), caso altere o nome das EC2.        
+        ***"tag:Name": ["devopers-jenkins","devopers-homolog","devopers-producao"]*** 
+
+    * config_all-ec2.yml    
+
         Atualiza pacotes em todas as EC2. Além de instalar uma série de softwares e suas dependências, dentre eles awscli, java, python. 
 
-    * install_docker_all-ec2.yml      
-        Instala o docker em todas as EC2.
+    * install_docker_all-ec2.yml   
 
-        O item abaixo atribuiu o usuário informado no grupo do docker.       
-            ***docker__users: ["ubuntu","jenkins"]***
-
-    É necessário alterar a linha 14 nos dois arquivos acima (config_all-ec2.yml e install_docker_all-ec2.yml), caso altere o nome das EC2.        
-        ***"tag:Name": ["devopers-jenkins","devopers-homolog","devopers-producao"]***   
+        Instala o docker em todas as EC2. O item abaixo atribuiu o usuário informado no grupo do docker.       
+            ***docker__users: ["ubuntu","jenkins"]***  
 
     * install_ansible_ec2-jenkins.yml       
         Instala ansible e pacotes para facilitar configurações.
