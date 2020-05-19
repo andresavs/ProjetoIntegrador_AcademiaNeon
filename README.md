@@ -334,17 +334,19 @@ Acessar a url de acordo com o nome ou ip publico gerado na AWS, para isso será 
 ![ec2-console](docs/ec2-console.png)
 
 Após logar no Jenkins com usuário e senha definidos no playbook install_jenkins_ec2-jenkins.yml, ir em Gerenciar Jenkins → Gerenciar de Plugins → Disponíveis → procurar e selecionar os seguintes itens:
-    1.pipeline
-    2.docker pipeline
-    3.ssh
-    4.github
-    5.github api
+
+    1.pipeline                              
+    2.docker pipeline                                       
+    3.ssh                                           
+    4.github                           
+    5.github api                                  
     6.amazon ecr
 
 Acessar a EC2 via ssh conforme exemplo abaixo (é possivel pegar esse comando no console da AWS também) para validar se o usuário jenkins está incluso no grupo docker do Linux (id jenkins):
 
-ssh -i <key> <usuario>@<host>
-ssh -i <nome da chave que o salvou playbook>.pem ubuntu@<nome ou ip publico do console aws>   
+`ssh -i key.pem usuario@host`  
+
+`ssh -i nome-da-chave-que-o-playbook-salvou.pem ubuntu@nome-ou-ip-publico-da-ec2-console-aws`   
 
 ![ec2-ssh](docs/ec2-ssh1.png)
 
@@ -375,7 +377,7 @@ Também será preciso cadastrar as credenciais, tanto as Credenciais de acesso v
 ## Customizando Jenkinsfile
 Antes de começarmos a customizar uma breve explicação de cada estágio do Jenkinsfile...
 
-![Jenkisfile](docs/Jenkisfile.png)
+![Jenkinsfile](docs/Jenkinsfile.png)
 
 Dentro do item ***stage("Build, Test and Push Docker Image")*** que será executado no servidor do Jenkins, temos 4 passos:
 
@@ -396,16 +398,16 @@ Será necessário customizar o arquivo Jenkinsfile, lembrando que ele deverá se
 
 * As variáveis de ambiente que estão na linha 7 até a 15, devem ser alteradas de acordo com o projeto, elas são utilizadas no teste local.
 
-    ![Jenkisfile-env](docs/Jenkisfile-env.png)
+    ![Jenkinsfile-env](docs/Jenkinsfile-env.png)
 
 * Aqui vamos configurar o teste local. As linhas que devem ser alteradas são: 38 (colocar o nome da branch do git do desenvolvedor, conforme imagem abaixo foi utilizado a master), 50 (nome:versao que a imagem vai receber, conforme imagem abaixo foi utilizado digitalhouse-devops-app:latest) e 59 (nome:versao - manter a utilizada na linha 50 e a porta que a aplicação vai rodar, foi usado 3000:3000).
 
-    ![Jenkisfile-teste](docs/Jenkisfile-teste.png)
+    ![Jenkinsfile-teste](docs/Jenkinsfile-teste.png)
 
 
-* Neste item vamos configurar o push da imagem para o AWS ECR. As linhas que devem ser alteradas são: 74 (é a url do repositório que criamos na AWS, deve ser pego no console da AWS - e ao colocar no arquivo o que foi copiado do console manter o https:// e retirar a barra e o nome do repositório, depois manter o item ecr:<regiao que criou o repositorio:nome que foi dado a credencial do jenkins>) e 75 (repetir apenas o nome da imagem utilizada na linha 50, sem a versão).
+* Neste item vamos configurar o push da imagem para o AWS ECR. As linhas que devem ser alteradas são: 74 (é a url do repositório que criamos na AWS, deve ser pego no console da AWS - e ao colocar no arquivo o que foi copiado do console manter o https:// e retirar a barra e o nome do repositório, depois manter o item ecr:regiao-que-criou-o-repositorio:nome que foi dado a credencial do jenkins) e 75 (repetir apenas o nome da imagem utilizada na linha 50, sem a versão).
 
-    ![Jenkisfile-ecr](docs/Jenkisfile-ecr.png)
+    ![Jenkinsfile-ecr](docs/Jenkinsfile-ecr.png)
 
 
     ![aws-ecr](docs/aws-ecr.png)
@@ -433,23 +435,33 @@ Será necessário customizar o arquivo Jenkinsfile, lembrando que ele deverá se
 **Importante**: Outros itens podem ser alterados de acordo com seu entendimento, por exemplo stage e echo, que são textos que vão ser mostrados no output e fazem referencia ao que está sendo feito. No deploy de homologação e produção também poderia ter usado credenciais do ECR, porém optamos por criar uma role na AWS para fazer esse permissionamento. 
 
 Para a criação da role seguir os seguintes passos:
-No console AWS ir em Services → IAM → Roles → Create Roles
+
+* No console AWS ir em Services → IAM → Roles → Create Roles
+
 
 ![aws-roles](docs/aws-roles.png)
 
-Na primeira tela, escolher quem vai assumir a role, a permissão, em nosso caso a EC2
+
+* Na primeira tela, escolher quem vai assumir a role, a permissão, em nosso caso a EC2
+
 
 ![role-ec2](docs/role-ec2.png)
 
-Na segunda tela, escolher o que vai pode ser feito, em nosso caso a EC2 vai ter acesso total ao bucket S3
+
+* Na segunda tela, escolher o que vai pode ser feito, em nosso caso a EC2 vai ter acesso total ao bucket S3
+
 
 ![role-s3](docs/role-s3.png)
 
-Na terceira tela, pode deixar em branco, usado para identificação
+
+* Na terceira tela, pode deixar em branco, usado para identificação
+
 
 ![role-tag](docs/role-tag.png)
 
-E por último dar um nome para a role, o ideal é usar nomes de fácil entendimento e identificação
+
+* E por último dar um nome para a role, o ideal é usar nomes de fácil entendimento e identificação
+
 
 ![role-name](docs/role-name.png)
 
