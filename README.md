@@ -420,7 +420,7 @@ Será necessário customizar o arquivo Jenkinsfile, lembrando que ele deverá se
 ***-p 3000:3000*** → Porta que vai rodar.                               
 ***733036961943.dkr.ecr.us-east-1.amazonaws.com/digitalhouse-devops-app:latest*** → repositorio aws ecr (só copiar a url) + versão que vamos utilizar.     
 
-![Jenkisfile-homolog](docs/Jenkisfile-homolog.png)
+![Jenkinsfile-homolog](docs/Jenkinsfile-homolog.png)
 
 * Neste item vamos configurar o Deploy para Produção. As linhas que devem ser alteradas são: 118 (nome do node/nó de produção criado no Jenkins), 124 (nome da branch do desenvolvedor que irá usar), 126 e 127 (alteração identica ao item do ecr, porém aqui vamos fazer o pull da imagem para utilizarmos em nosso deploy), 133 e 134 ((nome que deu para o container) e 136 (para efetuar o run algumas variáveis precisar ser passadas, além da imagem que está na AWS, veja abaixo).
 
@@ -430,7 +430,7 @@ Será necessário customizar o arquivo Jenkinsfile, lembrando que ele deverá se
 ***-p 80:3000*** → Porta que vai rodar.             
 ***733036961943.dkr.ecr.us-east-1.amazonaws.com/digitalhouse-devops-app:latest*** → repositorio aws ecr (só copiar a url) + versão que vamos utilizar.        
 
-![Jenkisfile-prod](docs/Jenkisfile-prod.png)
+![Jenkinsfile-prod](docs/Jenkinsfile-prod.png)
 
 **Importante**: Outros itens podem ser alterados de acordo com seu entendimento, por exemplo stage e echo, que são textos que vão ser mostrados no output e fazem referencia ao que está sendo feito. No deploy de homologação e produção também poderia ter usado credenciais do ECR, porém optamos por criar uma role na AWS para fazer esse permissionamento. 
 
@@ -467,8 +467,9 @@ Para a criação da role seguir os seguintes passos:
 
 
 Já para a criação das credenciais além de trocar as linhas 104 e 136 (sh "docker run.....) no Jenkinsfile pelo item abaixo, ainda é preciso configurar credenciais para cada ambiente.
-withCredentials([[$class:'AmazonWebServicesCredentialsBinding' 
-    , credentialsId: 'nomeCredencial']]) {
+
+withCredentials([[$class:'AmazonWebServicesCredentialsBinding'                                                    
+    , credentialsId: 'nomeCredencial']]) {                                                                   
     sh "docker run -d --name nome_app -p 30:3000 -e NODE_ENV=ambiente -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e BUCKET_NAME=nome_bucket 733036961943.dkr.ecr.us-east-1.amazonaws.com/digitalhouse-devops-app:latest"
     }
 
