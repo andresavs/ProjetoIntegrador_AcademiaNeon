@@ -126,7 +126,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 
 
 ## Ententendo e Customizando os Playbooks
-Caso queira apenas executar os playbooks para criar a Infra ir para o item [`Provisionando EC2 + S3 + IAM + ECR na AWS`](#provisionando-ec2--s3--iam--ecr-na-aws)
+Caso queira apenas executar os playbooks para criar a Infra ir para o item [`Provisionando EC2 + S3 + IAM + ECR na AWS`](#provisionando-ec2--s3--iam--ecr-na-aws).
 
 * **Falando um pouco sobre a estrutura para o ansible**:
 
@@ -322,14 +322,16 @@ Após todo o ambiente criado na AWS, precisamos configurar as máquinas, todas a
 * Instalar jenkins - Esse script foi preparado para atualizar apenas a EC2 do Jenkins ao ser executado...
     * `$ ansible-playbook playbooks/install_jenkins_ec2-jenkins.yml`
 
-Observação: todos os playbooks podem ser executados com o parametro "-vvv" para ter um nível maior de detalhes. 
+Observação: todos os playbooks podem ser executados com o parametro "-vvv" para ter um nível maior de detalhes.                                                          
 Ex: `$ ansible-playbook playbooks/aws_provisioning.yml -vvv`     
 
 
 
 ## Configurando Jenkins 
 Instalar plugins Jenkins que vamos utilizar em nosso pipeline.
-Acessar a url de acordo com o nome ou ip publico gerado na AWS, para isso será necessário entrar no console.
+Acessar a url de acordo com o nome ou ip publico gerado na AWS, para isso será necessário entrar no console e copiar um dos itens conforme imagem abaixo.
+
+![ec2-console](docs/ec2-console.png)
 
 Após logar no Jenkins com usuário e senha definidos no playbook install_jenkins_ec2-jenkins.yml, ir em Gerenciar Jenkins → Gerenciar de Plugins → Disponíveis → procurar e selecionar os seguintes itens:
     1.pipeline
@@ -342,7 +344,11 @@ Após logar no Jenkins com usuário e senha definidos no playbook install_jenkin
 Acessar a EC2 via ssh conforme exemplo abaixo (é possivel pegar esse comando no console da AWS também) para validar se o usuário jenkins está incluso no grupo docker do Linux (id jenkins):
 
 ssh -i <key> <usuario>@<host>
-ssh -i <chave que o salvou playbook>.pem ubuntu@<nome ou ip publico>   
+ssh -i <nome da chave que o salvou playbook>.pem ubuntu@<nome ou ip publico do console aws>   
+
+![ec2-ssh](docs/ec2-ssh1.png)
+
+![ec2-ssh](docs/ec2-ssh2.png)
 
 Caso o usuário não esteja executar o comando abaixo para incluir e depois reiniciar o serviço.
 * Verificar usuário
@@ -356,22 +362,103 @@ Caso o usuário não esteja executar o comando abaixo para incluir e depois rein
 * Validar o serviço do jenkins
     * `$ sudo service jenkins status`
 
-Configurar nodes Homolog e Produção para a execução do pipeline
-Gerenciar Jenkins → Gerenciar nós → novo nó
+É necessário configurar os nodes de Homologação e Produção para a execução do pipeline, para tal Ir em Gerenciar Jenkins → Gerenciar nós → novo nó
 
-Adicionar Credenciais para acessar as instâncias
-Credentials → Add Credentials
-Global e SSH username + private key
+Também será preciso cadastrar as credenciais, tanto as Credenciais de acesso via SSH como credenciais de acesso da AWS.
 
-Adicionar Credenciais para acessar AWS ECR
-Credentials → Add Credentials
-AWS Credentials + Global + ID e Private Key AWS
+1. Adicionar Credenciais para acessar as instâncias: Credentials → Add Credentials. Escolher Global e SSH username + private key
+
+2. Adicionar Credenciais para acessar AWS ECR: Credentials → Add Credentials. Escolher AWS Credentials + Global + ID e Private Key AWS
 
 
 
 ## Customizando Jenkinsfile
+Antes de começarmos a customizar uma breve explicação de cada estágio do Jenkinsfile...
+
+![Jenkisfile](docs/Jenkisfile.png)
+
+Dentro do item ***stage("Build, Test and Push Docker Image")*** que será executado no servidor do Jenkins, temos 4 passos:
+
+* ***stage('Clone repository')***: Clonar o repositório que vamos definir no pipeline.
+
+* ***sstage('Build image')***: Fazer o build da imagem.
+
+* ***sstage('Test image')***: Subir um container da imagem na porta informada e fazer o healthcheck.
+
+* ***sstage('Docker push')***: Subir a imagem no AWS ECR e versionar.
+
+Depois temos os itens ***stage('Deploy to Homolog')*** e ***stage('Deploy to Producao')***, ambos vão fazer o deploy da aplicação e da mesma forma, a diferença será o servidor é claro, que foi definido nas configurações de nodes/nos do Jenkins. O primeiro passo é buscar a imagem no AWS ECR, se o container estiver no ar ele pára, depois exclui, e somente depois roda e faz o healthcheck. Importante lembrar que para pular de um estágio para o outro todos tem que ser executados com sucesso.
+
+Utilizamos o catchError {...} pois na primeira execução o container não existe e dava erro na hora de parar e apagar o container e o pipeline não era concluído, é uma melhoria que ainda precisa ser feita, utilizar comandos docker x linux para validar se o container existe e se está no ar antes de executar os comandos de stop e rm. Na primeira execução, apesar do pipeline ficar verde, o job ficará vermelho, pois o erro foi ignorado, já na segundo teremos 100% de sucesso
 
 
+Será necessário customizar o arquivo Jenkinsfile, lembrando que ele deverá ser salvo no repositório do desenvolvedor, que no nosso caso é separado do repositório dos DevOps.
+
+* As variáveis de ambiente que estão na linha 7 até a 15, devem ser alteradas de acordo com o projeto, elas são utilizadas no teste local.
+
+    ![Jenkisfile-env](docs/Jenkisfile-env.png)
+
+* Aqui vamos configurar o teste local. As linhas que devem ser alteradas são: 38 (colocar o nome da branch do git do desenvolvedor, conforme imagem abaixo foi utilizado a master), 50 (nome:versao que a imagem vai receber, conforme imagem abaixo foi utilizado digitalhouse-devops-app:latest) e 59 (nome:versao - manter a utilizada na linha 50 e a porta que a aplicação vai rodar, foi usado 3000:3000).
+
+    ![Jenkisfile-teste](docs/Jenkisfile-teste.png)
+
+
+* Neste item vamos configurar o push da imagem para o AWS ECR. As linhas que devem ser alteradas são: 74 (é a url do repositório que criamos na AWS, deve ser pego no console da AWS - e ao colocar no arquivo o que foi copiado do console manter o https:// e retirar a barra e o nome do repositório, depois manter o item ecr:<regiao que criou o repositorio:nome que foi dado a credencial do jenkins>) e 75 (repetir apenas o nome da imagem utilizada na linha 50, sem a versão).
+
+    ![Jenkisfile-ecr](docs/Jenkisfile-ecr.png)
+
+
+    ![aws-ecr](docs/aws-ecr.png)
+
+* Neste item vamos configurar o Deploy para Homologação. As linhas que devem ser alteradas são: 86 (nome do node/nó de homologação criado no Jenkins), 92 (nome da branch do desenvolvedor que irá usar), 94 e 95 (alteração identica ao item de cima, porém aqui vamos fazer o pull da imagem para utilizarmos em nosso deploy), 101 e 102 (nome que deu para o container) e 104 (para efetuar o run algumas variáveis precisar ser passadas, além da imagem que está na AWS, veja abaixo).
+
+***--env NODE_ENV=homolog*** → Ambiente que está sendo feito o deploy e a aplicação vai mostrar no output do pipeline healthcheck.                           
+***--env BUCKET_NAME=digitalhouse-devopers-homolog*** → Nome do bucket do ambiente.                            
+***--name app_homolog*** → Nome do container docker.                           
+***-p 3000:3000*** → Porta que vai rodar.                               
+***733036961943.dkr.ecr.us-east-1.amazonaws.com/digitalhouse-devops-app:latest*** → repositorio aws ecr (só copiar a url) + versão que vamos utilizar.     
+
+![Jenkisfile-homolog](docs/Jenkisfile-homolog.png)
+
+* Neste item vamos configurar o Deploy para Produção. As linhas que devem ser alteradas são: 118 (nome do node/nó de produção criado no Jenkins), 124 (nome da branch do desenvolvedor que irá usar), 126 e 127 (alteração identica ao item do ecr, porém aqui vamos fazer o pull da imagem para utilizarmos em nosso deploy), 133 e 134 ((nome que deu para o container) e 136 (para efetuar o run algumas variáveis precisar ser passadas, além da imagem que está na AWS, veja abaixo).
+
+***--env NODE_ENV=producao*** → Ambiente que está sendo feito o deploy e a aplicação vai mostrar no output do pipeline healthcheck.            
+***--env BUCKET_NAME=digitalhouse-devopers-producao*** → Nome do bucket do ambiente.               
+***--name app_prod*** → Nome do container docker.               
+***-p 80:3000*** → Porta que vai rodar.             
+***733036961943.dkr.ecr.us-east-1.amazonaws.com/digitalhouse-devops-app:latest*** → repositorio aws ecr (só copiar a url) + versão que vamos utilizar.        
+
+![Jenkisfile-prod](docs/Jenkisfile-prod.png)
+
+**Importante**: Outros itens podem ser alterados de acordo com seu entendimento, por exemplo stage e echo, que são textos que vão ser mostrados no output e fazem referencia ao que está sendo feito. No deploy de homologação e produção também poderia ter usado credenciais do ECR, porém optamos por criar uma role na AWS para fazer esse permissionamento. 
+
+Para a criação da role seguir os seguintes passos:
+No console AWS ir em Services → IAM → Roles → Create Roles
+
+![aws-roles](docs/aws-roles.png)
+
+Na primeira tela, escolher quem vai assumir a role, a permissão, em nosso caso a EC2
+
+![role-ec2](docs/role-ec2.png)
+
+Na segunda tela, escolher o que vai pode ser feito, em nosso caso a EC2 vai ter acesso total ao bucket S3
+
+![role-s3](docs/role-s3.png)
+
+Na terceira tela, pode deixar em branco, usado para identificação
+
+![role-tag](docs/role-tag.png)
+
+E por último dar um nome para a role, o ideal é usar nomes de fácil entendimento e identificação
+
+![role-name](docs/role-name.png)
+
+
+Já para a criação das credenciais além de trocar as linhas 104 e 136 (sh "docker run.....) no Jenkinsfile pelo item abaixo, ainda é preciso configurar credenciais para cada ambiente.
+withCredentials([[$class:'AmazonWebServicesCredentialsBinding' 
+    , credentialsId: 'nomeCredencial']]) {
+    sh "docker run -d --name nome_app -p 30:3000 -e NODE_ENV=ambiente -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e BUCKET_NAME=nome_bucket 733036961943.dkr.ecr.us-east-1.amazonaws.com/digitalhouse-devops-app:latest"
+    }
 
 
 ## Pipeline Jenkins
