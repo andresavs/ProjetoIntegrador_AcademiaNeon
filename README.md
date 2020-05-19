@@ -126,6 +126,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
 
 
 ## Ententendo e Customizando os Playbooks
+Caso queira apenas executar os playbooks para criar a Infra ir para o item [`Provisionando EC2 + S3 + IAM + ECR na AWS`](#provisionando-ec2--s3--iam--ecr-na-aws)
 
 * **Falando um pouco sobre a estrutura para o ansible**:
 
