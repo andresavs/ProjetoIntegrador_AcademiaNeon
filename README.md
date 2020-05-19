@@ -33,6 +33,20 @@ Caso não tenha um ambiente de trabalho adequado por favor verificar o item abai
 
 
 
+## Pré-requisitos para executar os playbooks
+* Criar um arquivo de senha 
+    `$ vi ~/.ansible/.vault_pass` ou
+    `$ echo <"MinhaSenha"> ~/.ansible/.vault_pass`
+
+* Após criar a chave na AWS, criar o arquivo aws_credentials.yml com as informações         
+    AWSAccessKeyId: ABCDE*******       
+    AWSSecretKey: aBCD123-*******
+
+* Criptografar o arquivo
+    `$ ansible-vault encrypt playbooks/vars/aws_credentials.yml `
+
+
+
 ## Provisionando EC2 + S3 + IAM + ECR na AWS
 Partindo do presuposto que seu ambiente de trabalho já está preparado e com as devidas ferramentas instaladas e configuradas, podemos iniciar a criação do ambiente na AWS, caso contrário volte para a Preparação Inicial.
 
