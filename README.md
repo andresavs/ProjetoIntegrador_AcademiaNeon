@@ -83,7 +83,6 @@ Ou então utilizar o echo e substituir o texto <"MinhaSenha"> pela "senha".
     * Para descriptografar o arquivo com nosso arquivo de senhas.
 
         * `$ ansible-vault view playbooks/vars/aws_credentials.yml --vault-password-file ~/.ansible/.vault_pass `
-
 **Importante**: Mesmo criptrografado evitar de subir esse arquivo aws_credentials.yml no git. Para isso podemos utilizar o arquivo .gitignore.
 
 
@@ -210,7 +209,7 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
             A EC2 criada nesse playbook será o servidor Jenkins, por isso o nome. E também será criado um repositório [ECR](https://aws.amazon.com/pt/ecr/) - Amazon Elastic Container Registry, que é um serviço totalmente gerenciado que armazena imagens de conteiners do Docker, nele será armazenado e versionado as imagens que nosso pipeline irá gerar.
 
             Além do arquivo de variáveis também podemos definir variáveis específicas por playbooks, neste temos o nome que nossa EC2 terá, vide linha 8 e 9.              
-                ***vars:***
+                ***vars:***                                                 
                    ***name_service: devopers-jenkins***
             
             Temos as seguintes tasks nesse playbook:                          
