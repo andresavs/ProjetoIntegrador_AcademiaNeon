@@ -80,9 +80,10 @@ Ou então utilizar o echo e substituir o texto <"MinhaSenha"> pela "senha".
         * `$ cat playbooks/vars/aws_credentials.yml `
     
 
-    * Para descriptografar o arquivo com nosso arquivo de senhas.
+    * Para descriptografar o arquivo com nosso arquivo de senhas. O comando abaixo não tem quebra de linha.
 
         * `$ ansible-vault view playbooks/vars/aws_credentials.yml --vault-password-file ~/.ansible/.vault_pass `
+
 **Importante**: Mesmo criptrografado evitar de subir esse arquivo aws_credentials.yml no git. Para isso podemos utilizar o arquivo .gitignore.
 
 
@@ -233,11 +234,11 @@ Preencher com as keys da AWS salvas anteriormente. Colocar a região de trabalho
             
             Temos as seguintes tasks nesse playbook:
 
-               ***- name: Launch the new EC2 Instance 22*** → Cria a instância EC2 de acordo com as variáveis do itens vars_files e o vars.
-               ***- name: Wait for SSH to come up*** → Aguarda o serviço de SSH ficar disponível, ou seja, a terminar a configuração e máquina ficar running.
-               ***- name: Create iam user "{{ name_aim_user_s3 }}"*** → Criar o usuário IAM e dá as permissões.
-               ***- name: name: Create a buckets*** → Cria o bucket S3 (apesar de criar esse módulo é utilizado mais para gerenciar os arquivos).
-               ***- name: Create S3*** → Cria o bucket S3 e realiza as configurações.
+            ***- name: Launch the new EC2 Instance 22*** → Cria a instância EC2 de acordo com as variáveis do itens vars_files e o vars.
+            ***- name: Wait for SSH to come up*** → Aguarda o serviço de SSH ficar disponível, ou seja, a terminar a configuração e máquina ficar running.
+            ***- name: Create iam user "{{ name_aim_user_s3 }}"*** → Criar o usuário IAM e dá as permissões.
+            ***- name: name: Create a buckets*** → Cria o bucket S3 (apesar de criar esse módulo é utilizado mais para gerenciar os arquivos).
+            ***- name: Create S3*** → Cria o bucket S3 e realiza as configurações.
 
         [Link útil - módulo ansible iam user.](https://docs.ansible.com/ansible/latest/modules/iam_user_module.html)                 
         [Link útil - módulo ansible aws s3.](https://docs.ansible.com/ansible/latest/modules/aws_s3_module.html)                 
