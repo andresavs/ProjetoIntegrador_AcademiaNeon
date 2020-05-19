@@ -35,14 +35,18 @@ Caso não tenha um ambiente de trabalho adequado por favor verificar o item abai
 
 ## Pré-requisitos para executar os playbooks
 * Criar um arquivo de senha 
+
     `$ vi ~/.ansible/.vault_pass` ou
+
     `$ echo <"MinhaSenha"> ~/.ansible/.vault_pass`
 
-* Após criar a chave na AWS, criar o arquivo aws_credentials.yml com as informações         
+* Após criar a chave na AWS, criar o arquivo aws_credentials.yml com as informações 
+
     AWSAccessKeyId: ABCDE*******       
     AWSSecretKey: aBCD123-*******
 
 * Criptografar o arquivo
+
     `$ ansible-vault encrypt playbooks/vars/aws_credentials.yml `
 
 
@@ -58,6 +62,7 @@ O objetivo é criar um ambiente de Homologação e Produção + um servidor que 
 O script acima utiliza os seguintes scripts: aws_provisioning_vpc.yml, aws_provisioning_jenkins.yml, aws_provisioning_producao.yml, aws_provisioning_homolog.yml. Todos os playbooks 
 
 * Para validar se foi criado acessar o console da AWS ou executar o seguinte comando:
+
     * `$ ansible-inventory --graph aws_ec2`
 
 
