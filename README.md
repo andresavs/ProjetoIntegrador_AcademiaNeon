@@ -17,12 +17,12 @@ Resultados Esperados: Com os aplicativos NodeJS no ar as alunas devem observar a
 ## Conteúdos Adicionais
 
 Para acessar a Apresentação.
-* [`Apresentação - PowerPoint`](docs/DevOpers_PI.pptx)
+* [`Apresentação - PowerPoint`](docs/DevOpers_PI_Apresentacao.pptx)
 
-Para quem deseja replicar e entender melhor este projeto, pode baixar a documentação completa, um passo a passo, do que foi feito e como foi feito, para que qualquer pessoa que esteja iniciando seus estudos seja capaz de entender e executar.          
-* [`Tutorial de Como Fazer este Projeto do Zero`](docs/DevOpers_PI.docx)
+***Para quem deseja replicar e entender melhor este projeto, pode baixar a documentação completa, um passo a passo, do que foi feito e como foi feito, para que qualquer pessoa que esteja iniciando seus estudos seja capaz de entender e executar.***          
+* [`Tutorial de Como Fazer este Projeto do Zero`](docs/DevOpers_PI_Tutorial.docx)
 
-Caso não tenha um ambiente de trabalho adequado por favor verificar o item abaixo.           
+***Caso não tenha um ambiente de trabalho adequado por favor verificar o item abaixo.***           
 * [`Tutorial de Como Criar um Desktop de Trabalho`](https://github.com/andresavs/AcademiaNeon_DevOps)
 
 
@@ -59,7 +59,7 @@ O objetivo é criar um ambiente de Homologação e Produção + um servidor que 
 
     * `$ ansible-playbook playbooks/aws_provisioning.yml`
 
-O script acima utiliza os seguintes scripts: aws_provisioning_vpc.yml, aws_provisioning_jenkins.yml, aws_provisioning_producao.yml, aws_provisioning_homolog.yml. Todos os playbooks 
+O script acima utiliza os seguintes scripts: aws_provisioning_vpc.yml, aws_provisioning_jenkins.yml, aws_provisioning_producao.yml, aws_provisioning_homolog.yml. 
 
 * Para validar se foi criado acessar o console da AWS ou executar o seguinte comando:
 
@@ -94,21 +94,21 @@ Foi realizado um fork do [repositório do Desenvolvedor](https://github.com/bgso
 
 ## Evidências
 * Pipeline
-    * [Pipeline](docs/PipelineOk.png) executado com sucesso.
-    * [HealthCheck Homologação](docs/healthcheck-homolog.png) executado com sucesso.
-    * [HealthCheck Produção](docs/healthcheck-prod.png) executado com sucesso.
-    * [Output Pipeline](docs/Output-Pipeline.pdf) de todos os passos.
+    * [Pipeline](docs/evidencias-projeto/PipelineOk.png) executado com sucesso.
+    * [HealthCheck Homologação](docs/evidencias-projeto/healthcheck-homolog.png) executado com sucesso.
+    * [HealthCheck Produção](docs/evidencias-projeto/healthcheck-prod.png) executado com sucesso.
+    * [Output Pipeline](docs/evidencias-projeto/Output-Pipeline.pdf) de todos os passos.
 
 * Url
-    * [HealthCheck Homologação](docs/url-healthcheck-homolog.png) executado com sucesso.
-    * [HealthCheck Produção](docs/url-healthcheck-prod.png) executado com sucesso.
-    * [Upload Homologação](docs/url-upload-homolog.png) executado com sucesso.
-    * [Upload Produção](docs/url-upload-prod.png) executado com sucesso.
+    * [HealthCheck Homologação](docs/evidencias-projeto/url-healthcheck-homolog.png) executado com sucesso.
+    * [HealthCheck Produção](docs/evidencias-projeto/url-healthcheck-prod.png) executado com sucesso.
+    * [Upload Homologação](docs/evidencias-projeto/url-upload-homolog.png) executado com sucesso.
+    * [Upload Produção](docs/evidencias-projeto/url-upload-prod.png) executado com sucesso.
 
 * AWS S3
-    * [Buckets S3](docs/Buckets-S3.png) criados.
-    * [Bucket S3 Homolog](docs/BucketS3-homolog.png) com a imagem.
-    * [Bucket S3 Produção](docs/BucketS3-prod.png) com a imagem.
+    * [Buckets S3](docs/evidencias-projeto/Buckets-S3.png) criados.
+    * [Bucket S3 Homolog](docs/evidencias-projeto/BucketS3-homolog.png) com a imagem.
+    * [Bucket S3 Produção](docs/evidencias-projeto/BucketS3-prod.png) com a imagem.
 
 
 
