@@ -1,0 +1,71 @@
+- name: Ansible para configurar todas as ec2 na AWS
+  hosts: local
+  gather_facts: False
+
+  vars_files:
+    - vars/aws_credentials.yml
+    - vars/aws.yml
+
+  tasks:
+    - name: Get Info EC2
+      ec2_instance_info:
+        region: "{{ region }}"
+        filters:
+          "tag:Name": ["devopers-jenkins","devopers-homolog","devopers-producao"]
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"
+      register: ec2
+
+    - name: Add instance EC2 public IP to host group
+      add_host: hostname={{ item.public_dns_name }} groups=ec2all
+      loop: "{{ ec2.instances }}"
+
+# Inicia a configuracao da EC2
+
+- hosts: ec2all
+  name: Ansible para configurar VM
+  become: yes
+  become_method: sudo
+  gather_facts: true
+
+  vars_files:
+    - vars/aws_credentials.yml
+    - vars/aws.yml
+
+  tasks:
+    - name: Update APT Cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages to the latest version
+      apt:
+        name: "*"
+        state: latest
+        force_apt_get: yes
+      
+    - name: Verifique se uma lista de pacotes para instalar
+      package:
+        name: "{{ packages }}"
+        state: present
+        autoclean: yes
+        autoremove: yes
+        update_cache: yes
+      vars:
+        packages:
+        - python3
+        - python3-pip
+        - lvm2
+        - software-properties-common
+        - ntpdate
+        - openjdk-8-jdk
+
+    - name: Verifica pacotes essenciais do python
+      pip:
+        name: "{{ packages }}"
+        executable: pip3
+      vars:
+        packages:
+        - boto
+        - boto3
+        - botocore
+        - awscli

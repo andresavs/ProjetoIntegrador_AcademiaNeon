@@ -1,0 +1,38 @@
+- name: Install Docker (Todas ec2)
+  hosts: local
+  gather_facts: False
+
+  vars_files:
+    - vars/aws_credentials.yml
+    - vars/aws.yml
+
+  tasks:
+    - name: Get Info EC2
+      ec2_instance_info:
+        region: "{{ region }}"
+        filters:
+          "tag:Name": ["devopers-jenkins","devopers-homolog","devopers-producao"]
+        aws_access_key: "{{ AWS_access_key }}"
+        aws_secret_key: "{{ AWS_secret_key }}"
+      register: ec2
+
+    - name: Add instance EC2 public IP to host group
+      add_host: hostname={{ item.public_dns_name }} groups=ec2docker
+      loop: "{{ ec2.instances }}"
+
+# Inicia a configuracao da EC2
+- hosts: ec2docker
+  name: Install DevOPS
+  become: yes
+  become_method: sudo
+  gather_facts: true
+
+  vars:
+    docker__edition: "ce"
+    docker__compose_version: "1.25"
+    docker__state: "latest"
+    docker__users: ["ubuntu","jenkins"]
+    validate_certs: False
+  
+  roles:
+    - { role: nickjj.docker, remote_src: yes }

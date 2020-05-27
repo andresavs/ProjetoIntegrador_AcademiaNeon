@@ -1,0 +1,10 @@
+# Arquivos ignorados
+.DS_Store
+docs/.DS_Store
+
+# Credenciais AWS
+playbooks/vars/aws_credentials.yml
+
+# Logs
+
+# Diretorios
