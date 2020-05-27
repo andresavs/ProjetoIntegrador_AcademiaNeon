@@ -49,6 +49,10 @@ Para acessar a Apresentação.
 
     `$ ansible-vault encrypt playbooks/vars/aws_credentials.yml `
 
+* Alterar o nome do bucket S3 nos playbooks aws_provisioning_homolog.yml e aws_provisioning_producao.yml
+
+    ***Linha 11 dos arquivos, item name_bucket_s3***   
+
 
 
 ## Provisionando EC2 + S3 + IAM + ECR na AWS

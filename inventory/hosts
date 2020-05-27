@@ -1,7 +1,6 @@
 [all:vars]
 ansible_user=ubuntu
 ansible_connection=ssh
-ansible_ssh_private_key_file=./dh-pi-devopers-key.pem
 ansible_python_interpreter=/usr/bin/python3
 
 [local:vars]
@@ -19,5 +18,5 @@ ansible_python_interpreter=/usr/bin/python3
 [aws_ec2:vars]
 ansible_user=ubuntu
 ansible_connection=ssh
-ansible_ssh_private_key_file=./dh-pi-devopers-key.pem
+ansible_ssh_private_key_file=./dh-pi-devops-devopers-key.pem
 ansible_python_interpreter=/usr/bin/python3
