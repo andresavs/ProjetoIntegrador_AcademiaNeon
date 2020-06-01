@@ -20,7 +20,7 @@ Para acessar a Apresentação.
 * [`Apresentação - PowerPoint`](docs/DevOpers_PI_Apresentacao.pptx)
 
 ***Para quem deseja replicar e entender melhor este projeto, pode baixar a documentação completa, um passo a passo, do que foi feito e como foi feito, para que qualquer pessoa que esteja iniciando seus estudos seja capaz de entender e executar.***          
-* [`Tutorial de Como Fazer este Projeto do Zero`](docs/DevOpers_PI_Tutorial.docx)
+* [`Tutorial de Como Fazer este Projeto do Zero`](docs/DevOpers_PI_Tutorial.pdf)
 
 ***Caso não tenha um ambiente de trabalho adequado por favor verificar o item abaixo.***           
 * [`Tutorial de Como Criar um Desktop de Trabalho`](https://github.com/andresavs/AcademiaNeon_DevOps)
